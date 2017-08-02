@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="mcAldZ" name="JuceRX" displaySplashScreen="1" reportAppUsage="1"
+              splashScreenColour="Dark" projectType="guiapp" version="1.0.0"
+              bundleIdentifier="com.yourcompany.JuceRX" includeBinaryInAppConfig="1"
+              jucerVersion="5.0.2">
+  <MAINGROUP id="zHH6pD" name="JuceRX">
+    <GROUP id="{2736CF60-6889-328B-3DF1-5F1EDB74F77F}" name="Source">
+      <FILE id="vDYVDJ" name="RxComponent.cpp" compile="1" resource="0" file="Source/RxComponent.cpp"/>
+      <FILE id="XqFEmH" name="RxComponent.h" compile="0" resource="0" file="Source/RxComponent.h"/>
+      <FILE id="qRoXTq" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+      <FILE id="FixjeR" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="BblDwY" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2015 targetFolder="Builds/VisualStudio2015">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="1" optimisation="1" targetName="JuceRX" defines="JUCE_OPENGL3=1"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="0" optimisation="3" targetName="JuceRX"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="varx" path="../../projucer/JUCE/modules/varx"/>
+        <MODULEPATH id="juce_audio_utils" path="../../projucer/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2015>
+    <VS2017 targetFolder="Builds/VisualStudio2017">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="1" optimisation="1" targetName="JuceRX"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="0" optimisation="3" targetName="JuceRX"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="varx" path="../../projucer/JUCE/modules/varx"/>
+        <MODULEPATH id="juce_video" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../projucer/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../projucer/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2017>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_video" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="varx" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>
