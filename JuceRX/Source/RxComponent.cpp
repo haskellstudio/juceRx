@@ -29,7 +29,7 @@ using namespace std;
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 
 
-#include "rxcpp/rx.hpp"
+#include "E:/projucer/JUCE/modules/varx/varx/rxcpp/Rx/v2/src/rxcpp/rx.hpp"
 namespace Rx {
 	using namespace rxcpp;
 	using namespace rxcpp::sources;
@@ -238,6 +238,9 @@ RxComponent::RxComponent ( )
 									label->rx.text.onNext(juce::String(audio_source_01->getCurrentPosition()));
 
 						});
+
+
+	slider->rx.value.map(&textForDistortion).subscribe(label->rx.text);
 
 
 	//startTimer(1000);
