@@ -74,7 +74,7 @@ public:
 		audio_source_03->setAudioFormatReader(deviceManager.getAudioFormatReader(file_03));/**/
 
 		PSMixer::Mixer *mixer = new PSMixer::Mixer;
-		mixer->addStem(audio_source_01);
+		mixer->addStem(audio_source_01, true);
 		mixer->addStem(audio_source_02);
 		mixer->addStem(audio_source_03);
 
@@ -301,7 +301,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-
+	Drum drum;
 
 	ScopedPointer<Reactive<Slider>> slider;
 	ScopedPointer<Reactive<Label>> label;

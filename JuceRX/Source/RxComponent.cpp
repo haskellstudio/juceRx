@@ -231,8 +231,8 @@ RxComponent::RxComponent ( )
 
 	auto s1 = rxcpp::observe_on_new_thread();
 	//auto s2 = rxcpp::identity_current_thread();
-	//auto start = s1.now() + std::chrono::seconds(1);
-	auto period = std::chrono::seconds(1);
+	//auto start = s1.now() + std::chrono::seconds(1);  //
+	auto period = std::chrono::milliseconds(10);
 	auto values = rxcpp::observable<>::interval(period, s1);
 	values.
 		//take(3).
@@ -241,14 +241,33 @@ RxComponent::RxComponent ( )
 								const juce::MessageManagerLock mml(Thread::getCurrentThread());
 								if (!mml.lockWasGained())  // if something is trying to kill this job, the lock
 									return;
-								if(audio_source_01)
-									label->rx.text.onNext(juce::String(audio_source_01->getCurrentPosition()));
+
+								
+								if (drum._pos != g_pos)
+								{
+									drum._pos = g_pos;
+									drum.ajust(drum._pos);
+								}
+
+								double index0 = drum.getCurTypeTimeByIndex(drum.getIndex(0));
+								double index1 = drum.getCurTypeTimeByIndex(drum.getIndex(1));
+								juce::String s = String(drum._pos) + " " + String(index0) + " " + String(index1);
+
+								label->rx.text.onNext(s);
+								//if(audio_source_01)
+								//	label->rx.text.onNext(juce::String(audio_source_01->getCurrentPosition()));
 
 						});
-
+	
 
 	slider->rx.value.map(&textForDistortion).subscribe(label->rx.text);
 
+
+
+
+
+
+	//	showmsg(get_pid());
 
 	//startTimer(1000);
     //[/Constructor]

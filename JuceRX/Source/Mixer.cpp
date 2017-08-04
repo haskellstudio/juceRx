@@ -12,3 +12,4 @@ void showmsg(juce::String content, juce::String title, juce::String buttontext)
 
 
 std::string oldpid = "";
+double g_pos = 0.0;
