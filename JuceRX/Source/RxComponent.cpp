@@ -115,8 +115,15 @@ RxComponent::RxComponent ( )
 	openButton->rx.clicked.subscribe(
 		[this](int i) {
 						//openmix();
+						/* open();*/
 		startMixer();
-		/* open();*/}
+		//Drum drum;
+
+		//drum.ajust(1.6);
+		//int index = drum.getIndex(1);
+		//AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, juce::String(index), "index", "ok");
+		
+		}
 	);
 
 

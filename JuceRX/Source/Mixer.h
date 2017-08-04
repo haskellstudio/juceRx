@@ -1,6 +1,18 @@
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
 
+#include <sstream>
+#include <thread>
+#include <string>
+using namespace std;
+
+
+std::string get_pid();
+
+void showmsg(juce::String content, juce::String title = "", juce::String buttontext = "");
+
+extern std::string oldpid;
+
 namespace PSMixer
 {
 	const static int read_ahead_buffer_size =  16*1024;
@@ -100,13 +112,32 @@ namespace PSMixer
 		//}
 	};
 
-	class Mixer : public MixerAudioSource
+
+	class Mixer : public juce::MixerAudioSource
 	{
 	public:
-		void addStem(PSAudioSource *stem)
+		void addStem(PSAudioSource *stem, bool isMain = true)
 		{
+			if (isMain)
+				mainAS = stem;
 			addInputSource(stem, true);
 		}
+
+		void getNextAudioBlock(const AudioSourceChannelInfo& info) override
+		{
+			MixerAudioSource::getNextAudioBlock(info);
+
+
+			std::string newpid = get_pid();
+			if (oldpid != newpid)
+			{
+				oldpid = newpid;
+				showmsg(newpid);
+			}
+			
+		}
+
+		PSAudioSource * mainAS = nullptr;
 	};
 }
 
@@ -118,7 +149,11 @@ struct BeatType
 	int type = 0;
 	double typetime = 0.0;			// zhe ge yin chi xu de shi jian 
 	//double typeerrortime = 0.0;	//  type1time zuo you fan wei duo shao nei , hai suan zhe ge yin .
-
+	BeatType(int t, double tt)
+	{
+		type = t;
+		typetime = tt;
+	}
 	
 };
 
@@ -130,7 +165,10 @@ struct Drum
 
 	int typeIndexs[128] = { 0 };
 	int typeCount = 2;
-
+	Drum::Drum()
+	{
+		getsong(1);
+	}
 	void getsong(int i)
 	{
 		
@@ -138,12 +176,26 @@ struct Drum
 		{
 			BeatType song1types[] = {
 				{1, 1.0f },    
-				{2, 2.0f}
+				{0, 2.0f}
 
 			};
 			songArray.addArray(song1types, sizeof(song1types) / sizeof(BeatType));
 		}
 
+	}
+
+	int getIndex(int type)
+	{
+		if (type >= 0 && type < 128)
+		{
+			return typeIndexs[type];
+		}
+		else
+		{
+			AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, juce::String(type), "getIndex error", "ok");
+			return 0;
+		}
+			
 	}
 
 	void playEnd()
@@ -165,19 +217,25 @@ struct Drum
 				{
 					if (j <= songArray.size()-2)
 					{
-						int threshHold = songArray.getReference(j).typetime + (
-							(songArray.getReference(j + 1).typetime - songArray.getReference(j).typetime) / 2
-							);
-
-						if (curTime >= threshHold)
+						for (int k = j + 1; k < songArray.size(); k++)
 						{
-							typeIndexs[i]++;
-						}
-						else if (curTime < threshHold)
-						{
-							break;
-						}
+							if (songArray.getReference(k).type == i)
+							{
+								double threshHold = songArray.getReference(j).typetime + (
+									(songArray.getReference(k).typetime - songArray.getReference(j).typetime) / 2
+									);
 
+								if (curTime >= threshHold)
+								{
+									typeIndexs[i]++;
+								}
+								else if (curTime < threshHold)
+								{
+									break;
+								}
+
+							}
+						}
 					}
 
 				}

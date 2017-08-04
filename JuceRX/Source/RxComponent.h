@@ -58,9 +58,9 @@ public:
 	void startMixer()
 	{
 		PSMixer::DeviceManager deviceManager;
-		File file_01("C:/Users/zhufei/Desktop/mp3/allegory.mp3");
+		File file_01("C:/Users/zhufei/Desktop/Dennis Kuo - Sweet Saturn.mp3");
 		//File file_02("C:/Users/zhufei/Desktop/mp3/dusk.mp3");
-		File file_02("C:/Users/zhufei/Desktop/mp3/1.mp3");
+		File file_02("C:/Users/zhufei/Desktop/Dennis Kuo - Sweet Saturn_type12.mp3");
 		File file_03("C:/Users/zhufei/Desktop/mp3/killer.mp3");
 		audio_source_01 = new PSMixer::PSAudioSource;
 		audio_source_01->setAudioFormatReader(deviceManager.getAudioFormatReader(file_01));
@@ -86,12 +86,12 @@ public:
 		audio_source_03->setGain(1.0);
 
 		audio_source_01->start();
-		//audio_source_02->start();
+		audio_source_02->start();
 		//audio_source_03->start();
 
 		AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "getchar", "getchar", "getchar");
 
-		audio_source_02->start();
+		audio_source_02->stop();
 
 		AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "getchar", "getchar", "getchar");
 
@@ -283,6 +283,9 @@ public:
 			const float * audioData = bufferToFill.buffer->getReadPointer(i, bufferToFill.startSample);
 			//  ringBuffer->writeSamples (audioData, bufferToFill.numSamples, i);
 		}
+
+		//double pos = audio_source_01->getCurrentPosition();
+		//label->rx.text.onNext(juce::String(pos));
 	}
 
 

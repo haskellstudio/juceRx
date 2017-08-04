@@ -2793,6 +2793,9 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_varx.cpp">
       <Filter>Juce Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Mixer.cpp">
+      <Filter>JuceRX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\RxComponent.h">
@@ -5322,7 +5325,7 @@
       <Filter>Juce Library Code</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Mixer.h">
-      <Filter>JuceRX\Source</Filter>
+      <Filter>JuceRX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
