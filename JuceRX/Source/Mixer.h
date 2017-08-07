@@ -170,6 +170,7 @@ struct Drum
 
 	int typeIndexs[128] = { 0 };
 	int typeCount = 2;
+	float aheadTime = 0;
 	Drum::Drum()
 	{
 		_pos = 0;
@@ -177,7 +178,7 @@ struct Drum
 	}
 	void getsong(int i)
 	{
-		
+		aheadTime = -5;
 		if (i == 1)
 		{
 			BeatType song1types[] = {

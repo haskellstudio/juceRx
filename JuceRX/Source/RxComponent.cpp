@@ -109,19 +109,42 @@ RxComponent::RxComponent ( )
 
     setSize (600, 400);
 
-
+	showmsg(get_pid());
     //[Constructor] You can add your own custom stuff here..
 	//slider->rx.value.map([](double distortion) { return (distortion < 5 ? "cold" : "hot!"); }).subscribe(label->rx.text);
 	openButton->rx.clicked.subscribe(
 		[this](int i) {
 						//openmix();
 						/* open();*/
-		startMixer();
+		
 		//Drum drum;
 
 		//drum.ajust(1.6);
 		//int index = drum.getIndex(1);
 		//AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, juce::String(index), "index", "ok");
+
+
+		int interval = 500;
+		rxcpp::observable<>::interval(std::chrono::milliseconds(interval), rxcpp::observe_on_new_thread())
+			.take_while([this](int v) {return this->drum.aheadTime <= 0; })
+			.subscribe(
+				[this, interval](int v) {        
+					this->drum.aheadTime = this->drum.aheadTime + (float)interval/1000;
+					//const juce::MessageManagerLock mml(Thread::getCurrentThread());
+					//if (!mml.lockWasGained())  // if something is trying to kill this job, the lock
+					//	return;
+					g_pos = this->drum.aheadTime;
+					//string s;
+					//s = get_pid();
+					
+				},
+				[this]() {
+					
+					//const juce::MessageManagerLock mml(Thread::getCurrentThread());
+					this->startMixer();
+				}
+			
+			);
 		
 		}
 	);
@@ -229,11 +252,11 @@ RxComponent::RxComponent ( )
 	//																				});
 
 
-	auto s1 = rxcpp::observe_on_new_thread();
+
 	//auto s2 = rxcpp::identity_current_thread();
 	//auto start = s1.now() + std::chrono::seconds(1);  //
-	auto period = std::chrono::milliseconds(10);
-	auto values = rxcpp::observable<>::interval(period, s1);
+
+	auto values = rxcpp::observable<>::interval(std::chrono::milliseconds(10), rxcpp::observe_on_new_thread());
 	values.
 		//take(3).
 		subscribe(
