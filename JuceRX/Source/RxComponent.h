@@ -24,7 +24,14 @@
 #include "Mixer.h"
 using namespace varx;
 
-
+#include "E:/projucer/JUCE/modules/varx/varx/rxcpp/Rx/v2/src/rxcpp/rx.hpp"
+namespace Rx {
+	using namespace rxcpp;
+	using namespace rxcpp::sources;
+	using namespace rxcpp::operators;
+	using namespace rxcpp::util;
+}
+using namespace Rx;
 
 //[/Headers]
 
@@ -55,7 +62,8 @@ public:
 	PSMixer::PSAudioSource* audio_source_02 = nullptr;;
 	PSMixer::PSAudioSource* audio_source_03 = nullptr;;
 
-	
+	rxcpp::composite_subscription sth, sth2;
+
 	void startMixer()
 	{
 		PSMixer::DeviceManager deviceManager;

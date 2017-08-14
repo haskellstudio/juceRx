@@ -21,6 +21,7 @@
 #include <tuple>
 
 using namespace std;
+
 //[/Headers]
 
 #include "RxComponent.h"
@@ -29,14 +30,7 @@ using namespace std;
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 
 
-#include "E:/projucer/JUCE/modules/varx/varx/rxcpp/Rx/v2/src/rxcpp/rx.hpp"
-namespace Rx {
-	using namespace rxcpp;
-	using namespace rxcpp::sources;
-	using namespace rxcpp::operators;
-	using namespace rxcpp::util;
-}
-using namespace Rx;
+
 
 static String textForDistortion(double distortion) {
 	return (distortion < 5 ? "cold" : "hot!");
@@ -124,8 +118,8 @@ RxComponent::RxComponent ( )
 		//AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, juce::String(index), "index", "ok");
 
 
-		int interval = 500;
-		rxcpp::observable<>::interval(std::chrono::milliseconds(interval), rxcpp::observe_on_new_thread())
+		int interval = 50;
+		this->sth = rxcpp::observable<>::interval(std::chrono::milliseconds(interval), rxcpp::observe_on_new_thread())
 			.take_while([this](int v) {return this->drum.aheadTime <= 0; })
 			.subscribe(
 				[this, interval](int v) {        
@@ -257,7 +251,7 @@ RxComponent::RxComponent ( )
 	//auto start = s1.now() + std::chrono::seconds(1);  //
 
 	auto values = rxcpp::observable<>::interval(std::chrono::milliseconds(10), rxcpp::observe_on_new_thread());
-	values.
+	sth2 = values.
 		//take(3).
 		subscribe(
 			[this](int v) { 
@@ -301,7 +295,8 @@ RxComponent::~RxComponent()
     //[Destructor_pre]. You can add your own custom destruction code here..
 
 	state = nullptr;
-
+	sth.unsubscribe();
+	sth2.unsubscribe();
     //[/Destructor_pre]
 
     slider = nullptr;
@@ -313,6 +308,7 @@ RxComponent::~RxComponent()
 
     //[Destructor]. You can add your own custom destruction code here..
 	shutdownAudio();
+	
     //[/Destructor]
 }
 
