@@ -178,7 +178,7 @@ struct Drum
 	}
 	void getsong(int i)
 	{
-		aheadTime = -5;
+		aheadTime = -1;
 		if (i == 1)
 		{
 			BeatType song1types[] = {
@@ -244,6 +244,8 @@ struct Drum
 		}
 	}
 
+
+
 	void ajust(double curTime)
 	{
 		for (int i = 0; i < typeCount; i++)
@@ -277,8 +279,6 @@ struct Drum
 					}
 
 				}
-				
-
 			}
 		}
 	}
@@ -290,7 +290,92 @@ struct Drum
 
 
 
+struct units
+{
+	int type = 1000;
+	float timeDifference = 200.0;
 
+};
+
+
+
+//juce::Array<unit> * songArray = new juce::Array<unit>;
+
+
+
+
+struct LockFreeArray
+{
+
+	static const int _row = 100;
+//	static const int _col = 100;
+
+	int _wi = 0; //write index
+	int _ri = 0; //read index
+
+	bool _forceWrite = true;
+	juce::Array<units> allComing[_row];
+
+	int incRead()
+	{
+		if (_ri == _row - 1)
+		{
+			_ri = 0;
+		}
+		else
+		{
+			_ri++;
+		}
+	}
+
+	int incWrite()
+	{
+		if (_wi == _row - 1)
+		{
+			_wi = 0;
+		}
+		else
+		{
+			_wi++;
+		}
+	}
+
+	bool write(units& u)
+	{
+		if (_wi == _ri - 1  ||
+			( _wi == _row-1 && _ri == 0))
+		{
+			DBG("lock free Array is full, cannot wirte");
+			return false;
+		}
+		else
+		{
+			allComing[_wi].add(u);
+			incWrite();
+			return true;
+		}
+	}
+
+	bool read(juce::Array<units> & arg)
+	{
+		if (_ri != _wi )
+		{
+			arg = allComing[_ri];
+			incRead();
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+
+
+	
+	//juce::Array<   >  pAllArrays[100];
+};
 
 
 

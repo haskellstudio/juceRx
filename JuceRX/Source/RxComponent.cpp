@@ -119,7 +119,8 @@ RxComponent::RxComponent ( )
 		//AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, juce::String(index), "index", "ok");
 
 
-		int interval = 50;
+		int interval = 10;
+		
 	//	varx::Observable::interval(juce::RelativeTime::milliseconds(interval), varx::Scheduler::newThread());
 
 		this->sth = rxcpp::observable<>::interval(std::chrono::milliseconds(interval), rxcpp::observe_on_new_thread())
@@ -131,13 +132,21 @@ RxComponent::RxComponent ( )
 					//if (!mml.lockWasGained())  // if something is trying to kill this job, the lock
 					//	return;
 					g_pos = this->drum.aheadTime;
-					//string s;
-					//s = get_pid();
+					this->drum.ajust(this->drum.aheadTime);
 
+					this->drawAt();
 				},
+
+
 				[this]() {
+					this->drum.aheadTime = 0;
+					g_pos = this->drum.aheadTime;
+					this->drum.ajust(this->drum.aheadTime);
+					this->drawAt();
 
 					//const juce::MessageManagerLock mml(Thread::getCurrentThread());
+					//if (mml.lockWasGained())
+					
 					this->startMixer();
 				}
 
@@ -325,7 +334,7 @@ void RxComponent::paint (Graphics& g)
     g.fillAll (Colour (0xff323e44));
 
     //[UserPaint] Add your own custom painting code here..
-	component->drawCircleAt(0.5, 0.5);
+	//component->drawCircleAt(0.5, 0.5);
     //[/UserPaint]
 }
 

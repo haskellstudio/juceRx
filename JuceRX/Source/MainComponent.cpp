@@ -21,6 +21,11 @@ MainContentComponent::MainContentComponent()
 
 	addAndMakeVisible(rc = new RxComponent());
 	//	addAndMakeVisible(som = new Som());
+
+
+
+
+	
 }
 
 MainContentComponent::~MainContentComponent()

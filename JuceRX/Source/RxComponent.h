@@ -65,6 +65,22 @@ public:
 
 	rxcpp::composite_subscription sth, sth2;
 
+
+	void drawAt( bool inThread = true) 
+	{
+		int nxttime = drum.getCurTypeTimeByIndex(drum.getIndex(0));
+
+		float difference = nxttime - g_pos;
+		difference = difference / window;
+		if (difference >= 0.0f && difference <= 1.0f)
+		{
+			const juce::MessageManagerLock mml(Thread::getCurrentThread());
+			if(inThread)
+				if (mml.lockWasGained())
+					component->drawCircleAt(difference, 0.5);
+		}
+
+	}
 	void startMixer()
 	{
 		PSMixer::DeviceManager deviceManager;
@@ -101,9 +117,9 @@ public:
 
 		AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "getchar", "getchar", "getchar");
 
-		audio_source_02->stop();
+	//	audio_source_02->stop();
 
-		AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "getchar", "getchar", "getchar");
+	//	AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "getchar", "getchar", "getchar");
 
 
 		//audio_source_01->stop();
@@ -312,7 +328,7 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
 	Drum drum;
-
+	float window = 1.0f;
 	ScopedPointer<Reactive<Slider>> slider;
 	ScopedPointer<Reactive<Label>> label;
 	ScopedPointer<Reactive<TextButton>> openButton;

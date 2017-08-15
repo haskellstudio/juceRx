@@ -79,6 +79,8 @@ void DrawComponent::paint (Graphics& g)
 
 
 	g.setColour(Colours::yellow);
+	if(_pw <= getWidth() && _pw >= 0 && 
+		_ph <= getHeight() && _ph  >= 0 )
 	g.fillEllipse(_pw, _ph, _w, _h);
     //[/UserPaint]
 }
