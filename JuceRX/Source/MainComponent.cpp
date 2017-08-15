@@ -40,8 +40,11 @@ void MainContentComponent::paint (Graphics& g)
 
 void MainContentComponent::resized()
 {
-	if(rc)
+	/*if(rc)
 		rc->setBounds(0, 0, 496, 400);
+*/
+	if (rc)
+		rc->setBounds(0, 0, getWidth(), getHeight());
     // This is called when the MainContentComponent is resized.
     // If you add any child components, this is where you should
     // update their positions.

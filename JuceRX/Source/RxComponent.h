@@ -35,6 +35,7 @@ using namespace Rx;
 
 //[/Headers]
 
+#include "DrawComponent.h"
 
 
 //==============================================================================
@@ -219,7 +220,7 @@ public:
 
 		if(audio_source_01)
 		{
-			label->rx.text.onNext(juce::String(audio_source_01->getCurrentPosition()));																				
+			label->rx.text.onNext(juce::String(audio_source_01->getCurrentPosition()));
 		}
 	}
 
@@ -349,6 +350,7 @@ private:
     //ScopedPointer<TextButton> playButton;
     //ScopedPointer<TextButton> stopButton;
     //ScopedPointer<TextButton> openButton;
+    ScopedPointer<DrawComponent> component;
 
 
     //==============================================================================
