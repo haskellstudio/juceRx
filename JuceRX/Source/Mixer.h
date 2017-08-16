@@ -138,6 +138,7 @@ namespace PSMixer
 				mainAS = stem;
 			else
 			{
+				//need improve
 				if (type == 0)
 				{
 					type0AudioSrc = stem;
@@ -158,6 +159,7 @@ namespace PSMixer
 			if (mainAS)
 				g_pos = mainAS->getCurrentPosition();
 
+			//need improve
 			if (type0AudioSrc)
 			{
 				float pos = type0AudioSrc->getCurrentPosition();
@@ -187,6 +189,8 @@ namespace PSMixer
 
 		PSAudioSource * mainAS = nullptr;
 
+
+		//need improve
 		PSAudioSource * type0AudioSrc = nullptr;
 		PSAudioSource * type1AudioSrc = nullptr;
 	};
@@ -247,6 +251,8 @@ struct Drum
 
 	ScopedPointer<PSMixer::DeviceManager>  deviceManager;
 	PSMixer::PSAudioSource*  audio_source_01 = nullptr;
+
+	// need improve
 	PSMixer::PSAudioSource*  audio_source_type_0 = nullptr;
 	PSMixer::PSAudioSource*  audio_source_type_1 = nullptr;
 
@@ -274,6 +280,7 @@ struct Drum
 			audio_source_01->setAudioFormatReader(deviceManager->getAudioFormatReader(file_01));
 			//audio_source_01->addChangeListener(audio_source_01);
 
+			//need improve
 			audio_source_type_0 = new PSMixer::PSAudioSource;
 			audio_source_type_0->setAudioFormatReader(deviceManager->getAudioFormatReader(file_02));
 			//audio_source_type_0->addChangeListener(audio_source_type_0);
@@ -286,6 +293,8 @@ struct Drum
 
 			PSMixer::Mixer *mixer = new PSMixer::Mixer;
 			mixer->addStem(audio_source_01, -1, true);
+
+			//need improve
 			mixer->addStem(audio_source_type_0, 0);
 			mixer->addStem(audio_source_type_1, 1);
 
