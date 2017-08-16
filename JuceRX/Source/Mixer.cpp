@@ -5,7 +5,7 @@ std::string get_pid() {
 	return s.str();
 }
 
-void showmsg(juce::String content, juce::String title, juce::String buttontext)
+void msg(juce::String content, juce::String title, juce::String buttontext)
 {
 	AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, title, content, "ok");
 }

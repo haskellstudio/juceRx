@@ -59,12 +59,33 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-	PSMixer::PSAudioSource* audio_source_01 = nullptr;
-	PSMixer::PSAudioSource* audio_source_02 = nullptr;;
-	PSMixer::PSAudioSource* audio_source_03 = nullptr;;
+	//PSMixer::PSAudioSource* audio_source_01 = nullptr;
+	//PSMixer::PSAudioSource* audio_source_02 = nullptr;
+	//PSMixer::PSAudioSource* audio_source_03 = nullptr;
 
 	rxcpp::composite_subscription sth, sth2;
 
+
+	bool keyPressed(const KeyPress& key) override
+	{
+	//	msg("key press");
+		// need improve 
+		if (key.isKeyCode('0'))
+		{
+			drum.audio_source_type_0->setPosition(drum.audio_source_type_0->_startTime);
+			drum.audio_source_type_0->setGain(1.0);
+			drum.audio_source_type_0->start();
+
+		}
+		else if (key.isKeyCode('1'))
+		{
+			drum.audio_source_type_1->setPosition(drum.audio_source_type_1->_startTime);
+			drum.audio_source_type_1->setGain(1.0);
+			drum.audio_source_type_1->start();
+
+		}
+		return true;
+	}
 
 	void drawAt( bool inThread = true) 
 	{
@@ -96,41 +117,43 @@ public:
 	}
 	void startMixer()
 	{
-		PSMixer::DeviceManager deviceManager;
-		File file_01("C:/Users/zhufei/Desktop/Dennis Kuo - Sweet Saturn.mp3");
-		//File file_02("C:/Users/zhufei/Desktop/mp3/dusk.mp3");
-		File file_02("C:/Users/zhufei/Desktop/Dennis Kuo - Sweet Saturn_type12.mp3");
-		File file_03("C:/Users/zhufei/Desktop/mp3/killer.mp3");
-		audio_source_01 = new PSMixer::PSAudioSource;
-		audio_source_01->setAudioFormatReader(deviceManager.getAudioFormatReader(file_01));
+	//	//PSMixer::DeviceManager deviceManager; 
+	//	ScopedPointer<PSMixer::DeviceManager>  deviceManager = new 	PSMixer::DeviceManager;
+	//	File file_01("C:/Users/zhufei/Desktop/Dennis Kuo - Sweet Saturn.mp3");
+	//	//File file_02("C:/Users/zhufei/Desktop/mp3/dusk.mp3");
+	//	File file_02("C:/Users/zhufei/Desktop/Dennis Kuo - Sweet Saturn_type12.mp3");
+	//	File file_03("C:/Users/zhufei/Desktop/mp3/killer.mp3");
+	//	audio_source_01 = new PSMixer::PSAudioSource;
+	//	audio_source_01->setAudioFormatReader(deviceManager->getAudioFormatReader(file_01));
 
 
-		audio_source_02 = new PSMixer::PSAudioSource;
-		audio_source_02->setAudioFormatReader(deviceManager.getAudioFormatReader(file_02));
+	//	audio_source_02 = new PSMixer::PSAudioSource;
+	//	audio_source_02->setAudioFormatReader(deviceManager->getAudioFormatReader(file_02));
 
 
-		audio_source_03 = new PSMixer::PSAudioSource;
-		audio_source_03->setAudioFormatReader(deviceManager.getAudioFormatReader(file_03));/**/
+	//	audio_source_03 = new PSMixer::PSAudioSource;
+	//	audio_source_03->setAudioFormatReader(deviceManager->getAudioFormatReader(file_03));/**/
 
-		PSMixer::Mixer *mixer = new PSMixer::Mixer;
-		mixer->addStem(audio_source_01, true);
-		mixer->addStem(audio_source_02);
-		mixer->addStem(audio_source_03);
+	//	PSMixer::Mixer *mixer = new PSMixer::Mixer;
+	//	mixer->addStem(audio_source_01, true);
+	//	mixer->addStem(audio_source_02, 0);
+	//	mixer->addStem(audio_source_03, 1);
 
 
-		deviceManager.setMixer(mixer);
+	//	deviceManager->setMixer(mixer);
 
-		audio_source_01->setGain(1.0);
-		audio_source_02->setGain(1.0);
-		audio_source_03->setGain(1.0);
+	//	audio_source_01->setGain(1.0);
+	//	audio_source_02->setGain(1.0);
+	//	audio_source_03->setGain(1.0);
 
-		audio_source_01->start();
-		audio_source_02->start();
-		//audio_source_03->start();
+	//	audio_source_01->start();
+	//	audio_source_02->start();
+	//	//audio_source_03->start();
 
-		AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "getchar", "getchar", "getchar");
+	//	AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "getchar", "getchar", "getchar");
 
-	//	audio_source_02->stop();
+	////	audio_source_02->stop();
+	////	deviceManager->resetMixer();
 
 	//	AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "getchar", "getchar", "getchar");
 
@@ -247,9 +270,9 @@ public:
 	{
 		//AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "timerCallback", "timerCallback", "getchar");
 
-		if(audio_source_01)
+	//	if(audio_source_01)
 		{
-			label->rx.text.onNext(juce::String(audio_source_01->getCurrentPosition()));
+		//	label->rx.text.onNext(juce::String(audio_source_01->getCurrentPosition()));
 		}
 	}
 

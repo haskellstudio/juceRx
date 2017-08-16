@@ -9,7 +9,7 @@ using namespace std;
 
 std::string get_pid();
 
-void showmsg(juce::String content, juce::String title = "", juce::String buttontext = "");
+void msg(juce::String content, juce::String title = "", juce::String buttontext = "");
 
 extern std::string oldpid;
 extern double g_pos;
@@ -73,11 +73,14 @@ namespace PSMixer
 		}
 	};
 
-	class PSAudioSource : public AudioTransportSource
+	class PSAudioSource : public AudioTransportSource // , public ChangeListener
 	{
 		AudioFormatReader		*fileReader;
 		AudioFormatReaderSource *sourceReader;
 		juce::TimeSliceThread	readerThread;
+	public:
+		float _startTime = -1.0f;
+		float _endTime = -1.0f;
 
 	public:
 		PSAudioSource() : sourceReader(nullptr), readerThread("Stem Reader Thread")
@@ -92,6 +95,15 @@ namespace PSMixer
 			//stopThread();
 			//if(sourceReader) delete sourceReader;
 		}
+
+		//void changeListenerCallback(ChangeBroadcaster* source) override
+		//{
+		//	if (source == this)
+		//	{
+
+		//	}
+		//}
+
 
 		void setAudioFormatReader(AudioFormatReader * audio_reader)
 		{
@@ -115,11 +127,27 @@ namespace PSMixer
 
 	class Mixer : public juce::MixerAudioSource
 	{
+
+
 	public:
-		void addStem(PSAudioSource *stem, bool isMain = false)
+
+
+		void addStem(PSAudioSource *stem, int type, bool isMain = false)
 		{
 			if (isMain)
 				mainAS = stem;
+			else
+			{
+				if (type == 0)
+				{
+					type0AudioSrc = stem;
+				}
+				else if (type == 1)
+				{
+					type1AudioSrc = stem;
+				}
+			}
+
 			addInputSource(stem, true);
 		}
 
@@ -130,16 +158,37 @@ namespace PSMixer
 			if (mainAS)
 				g_pos = mainAS->getCurrentPosition();
 
+			if (type0AudioSrc)
+			{
+				float pos = type0AudioSrc->getCurrentPosition();
+				if (pos  >= type0AudioSrc->_endTime)
+				{
+					type0AudioSrc->setGain(0.0);
+				}
+			}
+
+			if (type1AudioSrc)
+			{
+				float pos = type1AudioSrc->getCurrentPosition();
+				if (pos >= type1AudioSrc->_endTime)
+				{
+					type1AudioSrc->setGain(0.0);
+				}
+			}
+
 			//std::string newpid = get_pid();
 			//if (oldpid != newpid)
 			//{
 			//	oldpid = newpid;
-			//	showmsg(newpid);
+			//	msg(newpid);
 			//}
 			
 		}
 
 		PSAudioSource * mainAS = nullptr;
+
+		PSAudioSource * type0AudioSrc = nullptr;
+		PSAudioSource * type1AudioSrc = nullptr;
 	};
 }
 
@@ -193,34 +242,100 @@ struct Drum
 	{
 	
 		playStart(1);
+		
 	}
+
+	ScopedPointer<PSMixer::DeviceManager>  deviceManager;
+	PSMixer::PSAudioSource*  audio_source_01 = nullptr;
+	PSMixer::PSAudioSource*  audio_source_type_0 = nullptr;
+	PSMixer::PSAudioSource*  audio_source_type_1 = nullptr;
+
+
+	void startPlayOrginalSong()
+	{
+		audio_source_01->start();
+	}
+
+	void playDrumForAPeriod()
+	{
+		//audio_source_type_1->addChangeListener
+	}
+	void loadRes(int i)
+	{
+		deviceManager = nullptr;
+		if (i == 1)
+		{
+			deviceManager = new PSMixer::DeviceManager;
+			File file_01("C:/Users/zhufei/Desktop/Dennis Kuo - Sweet Saturn.mp3");
+			//File file_02("C:/Users/zhufei/Desktop/mp3/dusk.mp3");
+			File file_02("C:/Users/zhufei/Desktop/Dennis Kuo - Sweet Saturn_type12.mp3");
+			File file_03("C:/Users/zhufei/Desktop/mp3/killer.mp3");
+			audio_source_01 = new PSMixer::PSAudioSource;
+			audio_source_01->setAudioFormatReader(deviceManager->getAudioFormatReader(file_01));
+			//audio_source_01->addChangeListener(audio_source_01);
+
+			audio_source_type_0 = new PSMixer::PSAudioSource;
+			audio_source_type_0->setAudioFormatReader(deviceManager->getAudioFormatReader(file_02));
+			//audio_source_type_0->addChangeListener(audio_source_type_0);
+
+			audio_source_type_1 = new PSMixer::PSAudioSource;
+			audio_source_type_1->setAudioFormatReader(deviceManager->getAudioFormatReader(file_02));
+
+		//	audio_source_03 = new PSMixer::PSAudioSource;
+		//	audio_source_03->setAudioFormatReader(deviceManager.getAudioFormatReader(file_03));/**/
+
+			PSMixer::Mixer *mixer = new PSMixer::Mixer;
+			mixer->addStem(audio_source_01, -1, true);
+			mixer->addStem(audio_source_type_0, 0);
+			mixer->addStem(audio_source_type_1, 1);
+
+		//	mixer->addStem(audio_source_03);
+
+
+			deviceManager->setMixer(mixer);
+			
+
+			audio_source_01->setGain(0.2);
+			audio_source_type_0->setGain(1.0);
+			audio_source_type_1->setGain(1.0);
+		//	audio_source_03->setGain(1.0);
+
+			//audio_source_01->start();
+			//audio_source_02->start();
+			//audio_source_03->start();
+
+			//AlertWindow::showMessageBox(AlertWindow::AlertIconType::InfoIcon, "getchar", "getchar", "getchar");
+
+		}
+	}
+
 	void getsong(int i)
 	{
 		aheadTime = -1;
 		typeCount = 2;
 		if (i == 1)
 		{
-			//BeatType song1types[] = {
-			//	{0, 0.001f, 	0.22f},
-			//	{ 1, 0.6f, 	0.75f },
-			//	{ 0, 1.10f,	1.270f },
-			//	{ 0, 1.270f, 	1.460f },
-			//	{ 1, 1.890f,      2.050f }
-
-			//};
-
 			BeatType song1types[] = {
-				{ 0, 0.001f, 	0.22f },
-				{ 1, 0.2f, 	0.22f },
-				{ 0, 0.41f, 	0.22f },
-				{ 1, 0.5f, 	0.22f },
-				{ 0, 0.7f, 	0.22f },
-				{ 0, 0.9f, 	0.22f },
+				{0, 0.001f, 	0.22f},
+				{ 1, 0.6f, 	1.0f}, //0.75f },
 				{ 0, 1.10f,	1.270f },
 				{ 0, 1.270f, 	1.460f },
 				{ 1, 1.890f,      2.050f }
 
 			};
+
+			//BeatType song1types[] = {
+			//	{ 0, 0.001f, 	0.22f },
+			//	{ 1, 0.2f, 	0.22f },
+			//	{ 0, 0.41f, 	0.22f },
+			//	{ 1, 0.5f, 	0.22f },
+			//	{ 0, 0.7f, 	0.22f },
+			//	{ 0, 0.9f, 	0.22f },
+			//	{ 0, 1.10f,	1.270f },
+			//	{ 0, 1.270f, 	1.460f },
+			//	{ 1, 1.890f,      2.050f }
+
+			//};
 
 
 			songArray.addArray(song1types, sizeof(song1types) / sizeof(BeatType));
@@ -244,6 +359,7 @@ struct Drum
 
 	void playStart(int arg)
 	{
+		loadRes(arg);
 		getsong(arg);
 		for (int i = 0; i < typeCount; i++)
 		{
@@ -253,11 +369,25 @@ struct Drum
 					if (songArray.getReference(k).type == i)
 					{
 						typeIndexs[i] = k;
+
+						// need improve
+						if (i == 0)
+						{
+							if (audio_source_type_0)
+							{
+								audio_source_type_0->_startTime = songArray.getReference(k).typetime;
+								audio_source_type_0->_endTime = songArray.getReference(k).typetimeend;
+							}
+						}
+						else if (i == 1)
+						{
+							audio_source_type_1->_startTime = songArray.getReference(k).typetime;
+							audio_source_type_1->_endTime = songArray.getReference(k).typetimeend;
+						}
 						break;
 					}
 				}
 		}
-
 	}
 
 	double getCurTypeTimeByIndex(int index)
@@ -303,6 +433,23 @@ struct Drum
 								if (curTime >= threshHold)
 								{
 									typeIndexs[i] = k;
+
+
+									float st = songArray.getReference(k).typetime;
+									float et = songArray.getReference(k).typetimeend;
+									// need improve
+									if (i == 0)
+									{
+										audio_source_type_0->setPosition(st);
+										audio_source_type_0->_startTime = st;
+										audio_source_type_0->_endTime = et;
+									}
+									else if(i == 1)
+									{
+										audio_source_type_1->setPosition(st);
+										audio_source_type_1->_startTime = st;
+										audio_source_type_1->_endTime = et;
+									}
 								}
 								else if (curTime < threshHold)
 								{

@@ -144,10 +144,11 @@ RxComponent::RxComponent ( )
 					this->drum.ajust(this->drum.aheadTime);
 					this->drawAt();
 
+					this->drum.startPlayOrginalSong();
 					//const juce::MessageManagerLock mml(Thread::getCurrentThread());
 					//if (mml.lockWasGained())
 					
-					this->startMixer();
+					//this->startMixer();
 				}
 
 			);
@@ -295,7 +296,7 @@ RxComponent::RxComponent ( )
 
 
 
-	//	showmsg(get_pid());
+	//	msg(get_pid());
 
 	//startTimer(1000);
     //[/Constructor]
