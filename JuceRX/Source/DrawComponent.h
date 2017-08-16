@@ -21,6 +21,7 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "Mixer.h"
 //[/Headers]
 
 
@@ -43,17 +44,22 @@ public:
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
 
-	void drawCircleAt(float percentagew, float percentageh, int width = 10, int height = 10)
+	void drawCircleAt(juce::Array<units> &ary)
 	{
-		//float wp = getWidth()*percentagew;
-		//float hp = getHeight() * percentageh;
-		//g.fillEllipse(wp, hp, width, height);
-		_pw = getWidth()*percentagew;
-		_ph = getHeight() *percentageh;
-		_w = width;
-		_h = height;
+		_unitsToDraw = ary;
 		repaint();
 	}
+	//void drawCircleAt(float percentagew, float percentageh, int width = 10, int height = 10)
+	//{
+	//	//float wp = getWidth()*percentagew;
+	//	//float hp = getHeight() * percentageh;
+	//	//g.fillEllipse(wp, hp, width, height);
+	//	_pw = getWidth()*percentagew;
+	//	_ph = getHeight() *percentageh;
+	//	_w = width;
+	//	_h = height;
+	//	repaint();
+	//}
 
     //[/UserMethods]
 
@@ -66,7 +72,7 @@ private:
     //[UserVariables]   -- You can add your own custom variables in this section.
 	float _pw, _ph;
 	int _w, _h;
-	
+	juce::Array<units> _unitsToDraw;
     //[/UserVariables]
 
     //==============================================================================

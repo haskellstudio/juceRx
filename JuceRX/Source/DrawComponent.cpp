@@ -71,17 +71,28 @@ void DrawComponent::paint (Graphics& g)
 
     g.fillAll (Colour (0xff323e44));
 	
-
     //[UserPaint] Add your own custom painting code here..
 
 	g.fillAll(Colour(0xffc62f2f));
 
+	
+	//if(_pw <= getWidth() && _pw >= 0 && 
+	//	_ph <= getHeight() && _ph  >= 0 )
+	//g.fillEllipse(_pw, _ph, _w, _h);
 
+	for (int i = 0; i < _unitsToDraw.size(); i++)
+	{
+		if (_unitsToDraw.getReference(i).type == 1)
+		{
+			g.setColour(Colours::cyan);
+		}
+		else
+		{
+			g.setColour(Colours::yellow);
+		}
+		g.fillEllipse(_unitsToDraw.getReference(i).timeDifference * getWidth() , 0.5 * getHeight(), 10, 10);
+	}
 
-	g.setColour(Colours::yellow);
-	if(_pw <= getWidth() && _pw >= 0 && 
-		_ph <= getHeight() && _ph  >= 0 )
-	g.fillEllipse(_pw, _ph, _w, _h);
     //[/UserPaint]
 }
 

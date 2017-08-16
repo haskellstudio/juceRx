@@ -272,15 +272,14 @@ RxComponent::RxComponent ( )
 									return;
 
 
-								if (drum._pos != g_pos)
+								if (drum._curTime != g_pos)
 								{
-									drum._pos = g_pos;
-									drum.ajust(drum._pos);
+									drum.ajust(g_pos);
 								}
 
 								double index0 = drum.getCurTypeTimeByIndex(drum.getIndex(0));
 								double index1 = drum.getCurTypeTimeByIndex(drum.getIndex(1));
-								juce::String s = String(drum._pos) + " " + String(index0) + " " + String(index1);
+								juce::String s = String(drum._curTime) + " " + String(index0) + " " + String(index1);
 
 								label->rx.text.onNext(s);
 								//if(audio_source_01)

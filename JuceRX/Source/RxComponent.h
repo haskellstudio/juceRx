@@ -68,17 +68,30 @@ public:
 
 	void drawAt( bool inThread = true) 
 	{
-		int nxttime = drum.getCurTypeTimeByIndex(drum.getIndex(0));
-
-		float difference = nxttime - g_pos;
-		difference = difference / window;
-		if (difference >= 0.0f && difference <= 1.0f)
+		juce::Array<units> ary;
+		drum.getUnitToDraw(ary);
 		{
 			const juce::MessageManagerLock mml(Thread::getCurrentThread());
-			if(inThread)
+			if (inThread)
 				if (mml.lockWasGained())
-					component->drawCircleAt(difference, 0.5);
+					component->drawCircleAt(ary);
 		}
+
+
+		//int nxttime = drum.getCurTypeTimeByIndex(drum.getIndex(0));
+
+		//float difference = nxttime - g_pos;
+		//difference = difference / drum._window;
+
+		//float difference = ary.getReference(0).timeDifference;
+
+		//if (difference >= 0.0f && difference <= 1.0f)
+		//{
+		//	const juce::MessageManagerLock mml(Thread::getCurrentThread());
+		//	if(inThread)
+		//		if (mml.lockWasGained())
+		//			component->drawCircleAt(difference, 0.5);
+		//}
 
 	}
 	void startMixer()
@@ -328,7 +341,6 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
 	Drum drum;
-	float window = 1.0f;
 	ScopedPointer<Reactive<Slider>> slider;
 	ScopedPointer<Reactive<Label>> label;
 	ScopedPointer<Reactive<TextButton>> openButton;

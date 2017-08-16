@@ -146,13 +146,30 @@ namespace PSMixer
 
 
 
+
+struct units
+{
+	int type = 1000;
+	float typetime = -1000.0;
+	float timeDifference = 200.0;
+	units( int t, float tt, float td)
+	{
+		type = t;
+		typetime = tt;
+		timeDifference = td;
+	}
+
+};
+
+
 struct BeatType
 {
 	int type = 0;
-	double typetime = 0.0;			// zhe ge yin chi xu de shi jian 
-	double typetimeend = 0.0;
+	float typetime = 0.0;			// zhe ge yin chi xu de shi jian 
+	float typetimeend = 0.0;
+	
 	//double typeerrortime = 0.0;	//  type1time zuo you fan wei duo shao nei , hai suan zhe ge yin .
-	BeatType(int t, double tt, double ttend)
+	BeatType(int t, float tt, float ttend)
 	{
 		type = t;
 		typetime = tt;
@@ -164,31 +181,48 @@ struct BeatType
 
 struct Drum
 {
-	double _pos;
-
+	float _curTime = -1000.0;
+	float _window = 1.0f;
 	juce::Array<BeatType> songArray;
 
 	int typeIndexs[128] = { 0 };
-	int typeCount = 2;
+
+	int typeCount = 0;
 	float aheadTime = 0;
 	Drum::Drum()
 	{
-		_pos = 0;
-		playStart();
+	
+		playStart(1);
 	}
 	void getsong(int i)
 	{
 		aheadTime = -1;
+		typeCount = 2;
 		if (i == 1)
 		{
+			//BeatType song1types[] = {
+			//	{0, 0.001f, 	0.22f},
+			//	{ 1, 0.6f, 	0.75f },
+			//	{ 0, 1.10f,	1.270f },
+			//	{ 0, 1.270f, 	1.460f },
+			//	{ 1, 1.890f,      2.050f }
+
+			//};
+
 			BeatType song1types[] = {
-				{0, 0.001f, 	0.22f},
-				{ 1, 0.6f, 	0.75f },
+				{ 0, 0.001f, 	0.22f },
+				{ 1, 0.2f, 	0.22f },
+				{ 0, 0.41f, 	0.22f },
+				{ 1, 0.5f, 	0.22f },
+				{ 0, 0.7f, 	0.22f },
+				{ 0, 0.9f, 	0.22f },
 				{ 0, 1.10f,	1.270f },
 				{ 0, 1.270f, 	1.460f },
 				{ 1, 1.890f,      2.050f }
 
 			};
+
+
 			songArray.addArray(song1types, sizeof(song1types) / sizeof(BeatType));
 		}
 
@@ -208,9 +242,9 @@ struct Drum
 			
 	}
 
-	void playStart()
+	void playStart(int arg)
 	{
-		getsong(1);
+		getsong(arg);
 		for (int i = 0; i < typeCount; i++)
 		{
 			typeIndexs[i] = 0;
@@ -246,8 +280,9 @@ struct Drum
 
 
 
-	void ajust(double curTime)
+	void ajust(float curTime)
 	{
+		_curTime = curTime;
 		for (int i = 0; i < typeCount; i++)
 		{
 			int j = typeIndexs[i];  // dang qian sheng yin lei xing de suo yin
@@ -283,19 +318,45 @@ struct Drum
 		}
 	}
 
+
+	void getUnitToDraw(juce::Array<units> & arg)
+	{
+		float shortestTime = 0.0f;
+		int shortestIndex = 0;
+		for (int itype = 0; itype < typeCount; itype++)
+		{
+			int index = getIndex(itype);
+			float time = getCurTypeTimeByIndex(index);
+			if (time < shortestTime)
+			{
+				shortestTime = time;
+				shortestIndex = index;
+			}
+		}
+		
+		for (int i = shortestIndex; i < songArray.size(); i++)
+		{
+			if (songArray.getReference(i).typetime - _curTime <= _window)
+			{
+				units u(songArray.getReference(i).type, songArray.getReference(i).typetime, (songArray.getReference(i).typetime -  _curTime)/_window  );
+				arg.add(u);
+			}
+			else
+			{
+				break;
+			}
+		}
+		if (arg.size() > 1)
+		{
+			shortestIndex = 0;
+		}
+
+	}
+
 };
 
 
 
-
-
-
-struct units
-{
-	int type = 1000;
-	float timeDifference = 200.0;
-
-};
 
 
 
@@ -307,8 +368,9 @@ struct units
 struct LockFreeArray
 {
 
-	static const int _row = 100;
-//	static const int _col = 100;
+	static const int _row = 512;
+
+	static const int _idleCount = 50;
 
 	int _wi = 0; //write index
 	int _ri = 0; //read index
@@ -340,28 +402,42 @@ struct LockFreeArray
 		}
 	}
 
-	bool write(units& u)
+	bool write(juce::Array<units> &  arg)
 	{
-		if (_wi == _ri - 1  ||
-			( _wi == _row-1 && _ri == 0))
+		if (_wi < _ri)
 		{
-			DBG("lock free Array is full, cannot wirte");
-			return false;
+			if (_ri  - _wi <= _idleCount)
+			{
+				DBG("lock free Array is full, cannot wirte");
+				return false;
+			}
 		}
-		else
+		else // _wi >= _ri
 		{
-			allComing[_wi].add(u);
-			incWrite();
-			return true;
+			int idle = _row - _wi + _ri  ;
+			if (idle <= _idleCount)
+			{
+				DBG("lock free Array is full, cannot wirte");
+				return false;
+			}
 		}
+		DBG("Write index: " << _wi << " Read index: " << _ri);
+
+		int oldw = _wi;
+	
+		allComing[oldw] = arg;
+		incWrite();
+		return true;
 	}
 
 	bool read(juce::Array<units> & arg)
 	{
 		if (_ri != _wi )
 		{
-			arg = allComing[_ri];
+			int oldr = _ri;
 			incRead();
+			arg = allComing[oldr];
+			allComing[oldr].clear();
 			return true;
 		}
 		else
